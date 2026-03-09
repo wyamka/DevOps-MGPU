@@ -25,7 +25,7 @@ flowchart LR
 
     subgraph COMPOSE["docker compose"]
         
-        subgraph NET["internal docker network"]
+        subgraph NET["Docker network"]
             LOADER["loader (ETL-скрипт)"]
             DB[(PostgreSQL 16)]
             DASH["dashboard (Streamlit)"]
