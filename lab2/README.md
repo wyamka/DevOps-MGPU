@@ -47,5 +47,5 @@ flowchart LR
     style DB fill:#336791,color:#fff
     style LOADER fill:#3a7d44,color:#fff
     style DASH fill:#ff4b4b,color:#fff
-    style SECRET fill:#6b5cff,color:#fff
+    style SECRET fill:#808080,color:#fff
 ```
