@@ -50,13 +50,47 @@ flowchart LR
     style SECRET fill:#808080,color:#fff
 ```
 
+## 2. Технологический стек
+```mermaid
+  graph TD
+    A[Python 3.10-slim] --> B[psycopg2 — драйвер PostgreSQL]
+    A --> C[Streamlit — веб-интерфейс аналитики]
+    A --> D[Plotly — интерактивные графики]
+    A --> E[Pandas — обработка данных]
+    A --> F[hashlib — анонимизация персональных данных]
 
+    G[PostgreSQL 16 Alpine] --> H[Хранение diabetes_data]
+
+    I[Docker Compose V2] --> J[Оркестрация сервисов: db, loader, dashboard]
+    I --> K[depends_on + healthcheck]
+    I --> L[named volume для PostgreSQL]
+
+    M[Docker Secrets] --> N[Передача encryption_key для анонимизации]
+
+    O[CSV Dataset] --> P[diabetes_new.csv]
+```
+
+## 3. Структура проекта
+```
+LW_02/
+├── app/
+│   ├── dashboard.py
+│   ├── Dockerfile
+│   ├── loader.py
+│   └── requirements.txt
+├── data/
+│   └── diabetes_new.csv
+├── secrets/
+│   └── encryption_key.txt
+├── .env
+└── docker-compose.yml
+```
 
 ## 4. Описание компонентов
 
 ### 4.1. Датасет diabetes_new.csv
 
-Дата-сет получен из открытого набора данных с Kaggle: https://www.kaggle.com/datasets/mathchi/diabetes-data-set путём добавления полей FirstName и SecondName для дальнейшей анонимизации данных в рамках проектной задачи Варианта 25.
+Датасет получен из открытого набора данных с Kaggle: https://www.kaggle.com/datasets/mathchi/diabetes-data-set путём добавления полей FirstName и SecondName для дальнейшей анонимизации данных в рамках проектной задачи Варианта 25.
 
 Поля набора данных:
 | Поле                        | Тип       | Описание                                                                                   |
@@ -85,3 +119,25 @@ flowchart LR
 | Очистка временных файлов и кэша       | Очистка `apt` кэша (`rm -rf /var/lib/apt/lists/*`) и установка Python-пакетов с `--no-cache-dir` |
 | Исключение лишних файлов из сборки    | В `.dockerignore` добавлены `__pycache__`, `.git`, `venv`, `.env`                               |
 
+### 4.3 app/loader.py
+Логика работы:
+
+- Ожидание доступности PostgreSQL (retry-цикл для предотвращения race condition между контейнерами).
+- Чтение ключа анонимизации из Docker Secret (/run/secrets/encryption_key), чтобы не передавать его через переменные окружения.
+- Создание таблицы diabetes_data в базе данных (CREATE TABLE IF NOT EXISTS).
+- Проверка наличия данных: если таблица уже содержит записи — загрузка пропускается (обеспечение идемпотентности ETL-процесса).
+- Чтение файла /data/diabetes_new.csv (подключён через bind mount из каталога data/).
+- Анонимизация персональных данных (FirstName, LastName) с помощью SHA-256 хеширования и секретного ключа.
+- Преобразование строк CSV в числовые значения и вставка данных в таблицу PostgreSQL (INSERT INTO diabetes_data).
+- Завершение работы ETL-контейнера (loader выполняется как init-контейнер и останавливается после загрузки данных).
+
+### 4.4 Dashboard (app/dashboard.py)
+
+Streamlit-приложение с несколькими визуализациями факторов риска диабета:
+
+- Гистограмма — распределение уровня глюкозы среди пациентов (с разделением по наличию диабета).
+- Диаграмма boxplot — связь индекса массы тела (BMI) и наличия диабета.
+- Точечная диаграмма — зависимость возраста и уровня глюкозы у пациентов.
+- Тепловая карта корреляции — показывает взаимосвязь между медицинскими показателями (глюкоза, давление, ИМТ, возраст и др.).
+
+Фильтр в боковой панели позволяет выбрать диапазон возраста пациентов для анализа.
