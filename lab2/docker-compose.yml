@@ -1,0 +1,68 @@
+# docker-compose.yml (Диабет)
+# Вариант 25 | Compose V2 (ключ version не используется)
+
+services:
+
+  # 1. База данных PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: diabetes_db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # 2. ETL-загрузчик (init-контейнер)
+  loader:
+    build:
+      context: ./app
+    container_name: diabetes_loader
+    entrypoint: ["python", "loader.py"]
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/data:ro
+    # Secrets
+    secrets:
+      - encryption_key
+    networks:
+      - backend-network
+
+  # 3. Streamlit Dashboard
+  dashboard:
+    build:
+      context: ./app
+    container_name: diabetes_dashboard
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      loader:
+        condition: service_completed_successfully
+    ports:
+      - "8501:8501"
+    networks:
+      - backend-network
+
+# Именованные тома
+volumes:
+  pg_data:
+
+# Секреты
+secrets:
+  encryption_key:
+    file: ./secrets/encryption_key.txt
+
+# Изолированная сеть
+networks:
+  backend-network:
+    driver: bridge
