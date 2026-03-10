@@ -223,39 +223,39 @@ env/
 
 1. **Проверка текущих контейнеров Docker**  
 Перед запуском проекта проверяем, какие контейнеры уже запущены:  
-![docker ps до работы](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/docker%20ps%20до%20работы.png)
+![docker ps до работы](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/docker%20ps%20до%20работы.png)
 
 2. **Сборка и запуск контейнеров проекта**  
 Запускаем Docker Compose с опцией сборки образов:  
-![docker compose up -d -build 1](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/docker%20compose%20up%20-d%20-build%201.png)  
-![docker compose up -d -build 2](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/docker%20compose%20up%20-d%20-build%202.png)
+![docker compose up -d -build 1](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/docker%20compose%20up%20-d%20-build%201.png)  
+![docker compose up -d -build 2](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/docker%20compose%20up%20-d%20-build%202.png)
 
 3. **Проверка статуса контейнеров после запуска**  
 Убедимся, что все сервисы запущены корректно:  
-![docker compose ps после запуска](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/docker%20compose%20ps%20после%20запуска.png)
+![docker compose ps после запуска](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/docker%20compose%20ps%20после%20запуска.png)
 
 4. **Просмотр логов загрузчика**  
 Проверяем процесс загрузки и анонимизации данных:  
-![logs](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/logs.png)
+![logs](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/logs.png)
 
 5. **Визуализация данных**  
 После успешной загрузки данных открываем Streamlit на локальном хосте:  
 
 - **Распределение уровня глюкозы у пациентов с диабетом и без него**  
-![Распределение уровня глюкозы у пациентов с диабетом и без него](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/Распределение%20уровня%20глюкозы%20у%20пациентов%20с%20диабетом%20и%20без%20него.png)  
+![Распределение уровня глюкозы](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/Распределение%20уровня%20глюкозы%20у%20пациентов%20с%20диабетом%20и%20без%20него.png)
 
 - **Связь ИМТ и наличия диабета**  
-![Связь ИМТ и диабета](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/Связь%20ИМТ%20и%20диабета.png)  
+![Связь ИМТ и диабета](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/Связь%20ИМТ%20и%20диабета.png)
 
 - **Возраст и уровень глюкозы**  
-![Корреляция возраста и уровня глюкозы](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/Корреляция%20возраста%20и%20уровня%20глюкозы.png)  
+![Корреляция возраста и уровня глюкозы](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/Корреляция%20возраста%20и%20уровня%20глюкозы.png)
 
 - **Корреляционная тепловая карта медицинских показателей**  
-![Тепловая карта медицинских показателей](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/Тепловая%20карта%20медицинских%20показателей.png)
+![Тепловая карта медицинских показателей](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/Тепловая%20карта%20медицинских%20показателей.png)
 
 6. **Остановка и удаление контейнеров после работы**  
 Завершаем работу с проектом, останавливаем и удаляем контейнеры:  
-![docker compose down](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/blob/main/lab2/screenshots/docker%20compose%20down.png)
+![docker compose down](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab2/screenshots/docker%20compose%20down.png)
 
 ## Вывод
 
