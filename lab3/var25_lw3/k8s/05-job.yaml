@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-loader-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: loader
+        image: diabetes-loader:v1
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-secret
+      restartPolicy: OnFailure
