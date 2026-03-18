@@ -395,7 +395,7 @@ spec:
    docker build -t diabetes-jupyter:v1 ./app
    ```
 
-![2build loader](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab3/screenshots/2build%20loader.png.png)
+![2build loader](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab3/screenshots/2build%20loader.png)
 
 ![3build app1](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab3/screenshots/3build%20app1.png)
 
@@ -403,7 +403,7 @@ spec:
 
 3. **Развертывание:** `kubectl apply -f k8s/`
 
-![5Развертывание](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab3/screenshots/Развертывание.png)
+![5Развертывание](https://raw.githubusercontent.com/wyamka/DevOps-MGPU/main/lab3/screenshots/5Развертывание.png)
 
 4. **Проверка доступности:** `minikube service app-service` (откроет браузер).
 5. **Логи для входа (token):** `kubectl logs deployment/app-deployment | grep token`
