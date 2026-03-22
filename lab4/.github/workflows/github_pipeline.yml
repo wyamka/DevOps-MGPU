@@ -1,29 +1,30 @@
-name: GitHub Diabetes ETL Smoke Test
+name: smoke-test
 
-on: 
+on:
   push:
     branches: [ main ]
+  pull_request:
 
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
+      - name: Build Docker image
         run: |
-          echo "Building Docker image on GitHub VM..."
           docker build -t diabetes-etl:smoke .
 
-      - name: Run Container
+      - name: Start container
         run: |
-          echo "Starting container for smoke test..."
-          docker run -d -p 8000:8000 --name etl-smoke diabetes-etl:smoke
-          sleep 5
+          docker run -d --name diabetes-etl-test diabetes-etl:smoke
 
-      - name: Smoke Test - Health Check
+      - name: Check /health endpoint
         run: |
-          echo "Checking /health endpoint..."
-          curl -f http://localhost:8000/health
+          curl -s http://localhost:8000/health
 
+      - name: Run Pytest
+        run: |
+          docker exec diabetes-etl-test pytest --maxfail=1 --disable-warnings -q

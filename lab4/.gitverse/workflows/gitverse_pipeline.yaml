@@ -18,7 +18,11 @@ jobs:
       - name: Run container
         run: |
           docker run -d -p 8000:8000 --name etl-smoke diabetes-etl:smoke
-          sleep 5
+          sleep 5  # ждем, пока FastAPI поднимется
 
       - name: Smoke test (health check)
         run: curl -f http://localhost:8000/health
+
+      - name: Run Pytest inside container
+        run: |
+          docker exec etl-smoke pytest --maxfail=1 --disable-warnings -q

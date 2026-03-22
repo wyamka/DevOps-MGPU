@@ -7,7 +7,7 @@ variables:
 
 etl_smoke_test_job:
   stage: smoke_test
-  image: docker:cli
+  image: docker:latest
   services:
     - docker:dind
 
@@ -23,3 +23,6 @@ etl_smoke_test_job:
 
     # Smoke test (если не 200 — job упадёт)
     - curl -f http://localhost:8000/health
+
+    # Запуск pytest внутри контейнера
+    - docker exec etl-smoke pytest --maxfail=1 --disable-warnings -q
