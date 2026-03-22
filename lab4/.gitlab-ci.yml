@@ -1,0 +1,25 @@
+stages:
+  - smoke_test
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+etl_smoke_test_job:
+  stage: smoke_test
+  image: docker:cli
+  services:
+    - docker:dind
+
+  script:
+    # Сборка образа
+    - docker build -t diabetes-etl:smoke .
+
+    # Запуск контейнера в фоне
+    - docker run -d -p 8000:8000 --name etl-smoke diabetes-etl:smoke
+
+    # Небольшая пауза, чтобы сервис успел подняться
+    - sleep 5
+
+    # Smoke test (если не 200 — job упадёт)
+    - curl -f http://localhost:8000/health
