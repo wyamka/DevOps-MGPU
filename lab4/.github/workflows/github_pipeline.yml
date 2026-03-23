@@ -1,11 +1,11 @@
-name: Diabetes ETL Smoke Test Pipeline
+name: Diabetes ETL Pipeline
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  smoke-test:
+  test-and-smoke:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,10 +15,13 @@ jobs:
       - name: Build Docker image
         run: docker build -t diabetes-etl:smoke .
 
+      - name: Run unit tests
+        run: docker run --rm diabetes-etl:smoke pytest
+
       - name: Run container
         run: |
           docker run -d --name etl-smoke diabetes-etl:smoke
-          sleep 5  # ждём, пока FastAPI сервис поднимется
+          sleep 5
 
       - name: Smoke test (health check)
         run: docker exec etl-smoke curl -f http://127.0.0.1:8000/health

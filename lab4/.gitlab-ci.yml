@@ -1,28 +1,38 @@
+# .gitlab-ci.yml
 stages:
-  - smoke_test
+  - build
+  - test
+  - smoke
 
 variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
+  IMAGE_NAME: "logistics-etl:smoke"
+  CONTAINER_NAME: "etl-smoke"
 
-etl_smoke_test_job:
-  stage: smoke_test
-  image: docker:latest
+# Stage 1: Build Docker image
+build:
+  stage: build
+  image: docker:24.0.5  # версия Docker CLI
   services:
-    - docker:dind
-
+    - docker:24.0.5-dind
   script:
-    # Сборка образа
-    - docker build -t diabetes-etl:smoke .
+    - docker build -t $IMAGE_NAME .
 
-    # Запуск контейнера в фоне
-    - docker run -d -p 8000:8000 --name etl-smoke diabetes-etl:smoke
+# Stage 2: Run unit tests
+unit_tests:
+  stage: test
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - docker run --rm $IMAGE_NAME pytest
 
-    # Небольшая пауза, чтобы сервис успел подняться
+# Stage 3: Run container and smoke test
+smoke_test:
+  stage: smoke
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - docker run -d --name $CONTAINER_NAME $IMAGE_NAME
     - sleep 5
-
-    # Smoke test (если не 200 — job упадёт)
-    - curl -f http://localhost:8000/health
-
-    # Запуск pytest внутри контейнера
-    - docker exec etl-smoke pytest --maxfail=1 --disable-warnings -q
+    - docker exec $CONTAINER_NAME curl -f http://127.0.0.1:8000/health
